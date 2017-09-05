@@ -47,3 +47,26 @@ df$Street.2 <- clean_street_clmn(df$Street.2)
 
 df[df$Street == df$Street.2, "Street.2"] <- ""
 ```
+
+**Remove the "Strange HTML column"**
+
+```{r remove-strange-html}
+df <- df[,-5]
+```
+
+Each team member will complete the cleanup code and push the changes to the repository.
+
+The team lead will combine the changes into a single code. The team lead will submit a link to the repository. The repository will contain:
+* Combined code (.r or .rmd) 
+* Original (dirty) dataset
+* New (clean) dataset 
+
+```{r write-to-csv}
+write.csv2(df,
+           file="clean_data.csv",
+           append=FALSE,
+           sep="|",
+           quote=FALSE,
+           row.names=FALSE,
+           col.names=TRUE)
+```

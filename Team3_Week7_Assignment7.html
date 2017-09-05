@@ -159,6 +159,11 @@ df$Street &lt;- clean_street_clmn(df$Street)
 df$Street.2 &lt;- clean_street_clmn(df$Street.2)
 
 df[df$Street == df$Street.2, &quot;Street.2&quot;] &lt;- &quot;&quot;</code></pre>
+<p><strong>Remove the “Strange HTML column”</strong></p>
+<pre class="r"><code>df &lt;- df[,-5]</code></pre>
+<p>Each team member will complete the cleanup code and push the changes to the repository.</p>
+<p>The team lead will combine the changes into a single code. The team lead will submit a link to the repository. The repository will contain: * Combined code (.r or .rmd) * Original (dirty) dataset * New (clean) dataset</p>
+<pre class="r"><code>write.csv2(df, file=&quot;clean_data.csv&quot;, append=FALSE, sep=&quot;|&quot;, quote=FALSE, row.names=FALSE, col.names=TRUE)</code></pre>
 
 
 
