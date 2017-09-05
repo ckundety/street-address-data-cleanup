@@ -139,11 +139,26 @@ library(dplyr)</code></pre>
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(tidyr)
-df &lt;- df %&gt;% fill(Area)</code></pre>
+df &lt;- df %&gt;% fill(Area, .direction=&quot;down&quot;)</code></pre>
 <p><strong>Remove special characters, padding (the white space before and after the text) from Street 1 and Street 2 variables. Make sure the first letters of street names are capitalized and the street denominations are following the same standard (for example, all streets are indicated as “str.”, avenues as “ave.”, etc. If the value in Street 2 duplicates the value in Street 1, remove the value in Street 2</strong></p>
-<p><strong>Remove the “Strange HTML column”</strong></p>
-<p>Each team member will complete the cleanup code and push the changes to the repository.</p>
-<p>The team lead will combine the changes into a single code. The team lead will submit a link to the repository. The repository will contain: * Combined code (.r or .rmd) * Original (dirty) dataset * New (clean) dataset</p>
+<pre class="r"><code>clean_street_clmn &lt;- function(vec) {
+  return(vec %&gt;%
+    gsub(pattern=&quot;[^a-zA-Z\\d\\s,]&quot;, replacement=&quot; &quot;, perl=TRUE) %&gt;%
+    trimws(which=&quot;both&quot;) %&gt;%
+    gsub(pattern=&quot;\\s+&quot;, replacement=&quot; &quot;, perl=TRUE) %&gt;%
+    gsub(pattern=&quot;street&quot;, replacement=&quot;st.&quot;, ignore.case=TRUE) %&gt;%
+    gsub(pattern=&quot;avenue&quot;, replacement=&quot;ave.&quot;, ignore.case=TRUE) %&gt;%
+    gsub(pattern=&quot;road&quot;, replacement=&quot;rd.&quot;, ignore.case=TRUE) %&gt;%
+    gsub(pattern=&quot;lane&quot;, replacement=&quot;ln.&quot;, ignore.case=TRUE) %&gt;%
+    gsub(pattern=&quot;boulevard&quot;, replacement=&quot;blvd.&quot;, ignore.case=TRUE) %&gt;%
+    gsub(pattern=&quot;\\b([[:lower:]])([[:lower:]]+)&quot;, replacement=&quot;\\U\\1\\L\\2&quot;, perl=TRUE)
+  )
+}
+
+df$Street &lt;- clean_street_clmn(df$Street)
+df$Street.2 &lt;- clean_street_clmn(df$Street.2)
+
+df[df$Street == df$Street.2, &quot;Street.2&quot;] &lt;- &quot;&quot;</code></pre>
 
 
 

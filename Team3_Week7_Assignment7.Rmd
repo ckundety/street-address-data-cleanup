@@ -21,6 +21,29 @@ df <- read.csv("dirty_data.csv", header=TRUE, stringsAsFactors=FALSE, na.strings
 
 library(dplyr)
 library(tidyr)
-df <- df %>% fill(Area)
+df <- df %>% fill(Area, .direction="down")
 
+```
+
+**Remove special characters, padding (the white space before and after the text) from Street 1 and Street 2 variables. Make sure the first letters of street names are capitalized and the street denominations are following the same standard (for example, all streets are indicated as "str.", avenues as "ave.", etc. If the value in Street 2 duplicates the value in Street 1, remove the value in Street 2**
+
+```{r clean-street-columns}
+clean_street_clmn <- function(vec) {
+  return(vec %>%
+    gsub(pattern="[^a-zA-Z\\d\\s,]", replacement=" ", perl=TRUE) %>%
+    trimws(which="both") %>%
+    gsub(pattern="\\s+", replacement=" ", perl=TRUE) %>%
+    gsub(pattern="street", replacement="st.", ignore.case=TRUE) %>%
+    gsub(pattern="avenue", replacement="ave.", ignore.case=TRUE) %>%
+    gsub(pattern="road", replacement="rd.", ignore.case=TRUE) %>%
+    gsub(pattern="lane", replacement="ln.", ignore.case=TRUE) %>%
+    gsub(pattern="boulevard", replacement="blvd.", ignore.case=TRUE) %>%
+    gsub(pattern="\\b([[:lower:]])([[:lower:]]+)", replacement="\\U\\1\\L\\2", perl=TRUE)
+  )
+}
+
+df$Street <- clean_street_clmn(df$Street)
+df$Street.2 <- clean_street_clmn(df$Street.2)
+
+df[df$Street == df$Street.2, "Street.2"] <- ""
 ```
